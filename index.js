@@ -43,5 +43,6 @@ app.use("/like", likeRouter);
 
 app.listen(PORT, () => {
     LoadDB();
+    console.log("welcome to blogify backend code");
     console.log("server started at port "+PORT);
 });
