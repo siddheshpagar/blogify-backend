@@ -12,37 +12,43 @@ const PORT = process.env.PORT;
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
 
 const app = express();
+
+// Setting up CORS to allow frontend to make requests
 app.use(cors(
     {
-        origin: FRONTEND_ORIGIN, // Frontend origin
-        credentials: true, // Allow credentials (cookies)
+        origin: FRONTEND_ORIGIN, // Allow requests from perticular URL
+        credentials: true, // Allow cookies
     }
 ));
+
+// Middleware to parse JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(express.static("blogsImg"));
+
+// Serving blog images from the uploads directory
 app.use('/blog-pics', express.static('uploads/blogsImg'));
 
 app.use(cookieParser());
-// creating connection with database 
+
+//initializing the database connection
 const LoadDB = async () => {
     await ConnectDb();
 }
 
-// admin related routes
+// routes for admin-related operations
 app.use("/admin", adminRouter);
 
-//user related routes
+// routes for user-related operations
 app.use("/user", userRouter);
 
-// blog related routes
+// routes for blog-related operations
 app.use("/blog", blogRouter);
 
-//likes related routes
+// routes for blog-likes-related operations
 app.use("/like", likeRouter);
 
+// Starting the server and connect to the database
 app.listen(PORT, () => {
     LoadDB();
-    
     console.log("server started at port "+PORT);
 });
