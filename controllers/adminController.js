@@ -6,18 +6,19 @@ import User from '../databaseConnection/models/User.js';
 
 const JWT_ADMIN_SECRET = process.env.JWT_ADMIN_SECRET; // Access from .env
 
-/* Admin sign up code starts here */
+/* Admin sign up */
 export const signUpAdmin = async (request, response) => {
     try {
         const { name, email, password } = request.body;
 
+        // Check whether all required fields are provided or not 
         if (!name || !email || !password) {
             return response.status(StatusCodes.BAD_REQUEST).send({
                 message: "All fields are required.",
             });
         }
 
-        // reqData["password"] = await bcrypt.hash(reqData.password, 10); //reqData["password"] = bcrypt.hashSync(reqData.password, 10);
+        // Hash the password before saving it in the database
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const admin = new Admin({
@@ -26,11 +27,13 @@ export const signUpAdmin = async (request, response) => {
             password: hashedPassword,
         });
         await admin.save();
+
         return response.status(StatusCodes.CREATED).send({
             message: "Admin Signup successfully"
         });
     } catch (error) {
-        //if error exist send the error
+
+        // if duplicate email found send error
         if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
             return response.status(StatusCodes.CONFLICT).send({
                 message: "Email is already registered. Please use a different email."
@@ -41,26 +44,28 @@ export const signUpAdmin = async (request, response) => {
         });
     }
 }
-/* Admin sign up code ends here */
 
-/* Admin login code starts here */
+/* Admin login */
 export const loginAdmin = async (request, response) => {
     try {
         const admin = await Admin.findOne({ email: request.body.email });
         if (admin) {
+            // Check if password is correct or not
             const isPasswordValid = await bcrypt.compare(request.body.password, admin.password)
             if (isPasswordValid) {
+
+                // Generating a JWT token 
                 const token = jwt.sign(
                     { adminemail: admin.email, id: admin._id },
                     JWT_ADMIN_SECRET,
                     // { expiresIn: '1h' }
                 );
 
-                // Setting JWT token in the cookie
+                // Setting the token in a cookie
                 response.cookie('adminToken', token, {
-                    httpOnly: true,  // Makes it accessible only by the web server
-                    secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
-                    maxAge: 60 * 60 * 1000 // Cookie expires in 2 min
+                    httpOnly: true, // Restrict access to clien-side JavaScript 
+                    secure: process.env.NODE_ENV === 'production', // cookie to be sent over https only
+                    // maxAge: 60 * 60 * 1000 // Cookie expires in 1 hrs
                 });
 
                 return response.status(StatusCodes.OK).send({
@@ -85,21 +90,23 @@ export const loginAdmin = async (request, response) => {
         });
     }
 }
-/* Admin login code ends here */
 
-/* block and unblock user code starts here */
+/* block and unblock user */
 export const setBlockStatusById = async (request, response) => {
     try {
         const userId = request.params.id;
         const { isBlocked } = request.body;
+
+        // Find user by ID
         const user = await User.findById(userId);
-        // console.log(user);
+
         if (!user) {
             return response.status(StatusCodes.NOT_FOUND).send({
                 message: "User not found"
             });
         }
 
+        // Update block status
         user.isBlocked = isBlocked;
         await user.save();
 
@@ -113,11 +120,11 @@ export const setBlockStatusById = async (request, response) => {
         });
     }
 }
-/* block and unblock user code ends here */
 
-/* Fetch all users code starts here */
+/* Fetch all users */
 export const getAllUsers = async (request, response) => {
     try {
+        // Fetching all users excluding their passwords 
         const users = await User.find({}, { password: 0 });
         return response.status(StatusCodes.OK).send({
             message: "Users fetched successfully",
@@ -129,7 +136,8 @@ export const getAllUsers = async (request, response) => {
         });
     }
 };
-/* Fetch all users code ends here */
+
+/* Fetch admin details */
 export const getAdminDetail = async (request, response) => {
     try {
 
@@ -142,6 +150,8 @@ export const getAdminDetail = async (request, response) => {
         });
     }
 }
+
+/* Admin logout */
 export const logoutAdmin = async (request, response) => {
     response.clearCookie("adminToken", { path: "/" });
     return response.status(StatusCodes.OK).send({ message: "you have been successfully logged out." });

@@ -25,7 +25,7 @@ app.use(cors(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Serving blog images from the uploads directory
+// Serving blog images from the uploads/blogsImg directory
 app.use('/blog-pics', express.static('uploads/blogsImg'));
 
 app.use(cookieParser());
