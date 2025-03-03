@@ -32,7 +32,6 @@ export const signUpAdmin = async (request, response) => {
             message: "Admin Signup successfully"
         });
     } catch (error) {
-
         // if duplicate email found send error
         if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
             return response.status(StatusCodes.CONFLICT).send({
@@ -53,7 +52,6 @@ export const loginAdmin = async (request, response) => {
             // Check if password is correct or not
             const isPasswordValid = await bcrypt.compare(request.body.password, admin.password)
             if (isPasswordValid) {
-
                 // Generating a JWT token 
                 const token = jwt.sign(
                     { adminemail: admin.email, id: admin._id },
@@ -140,7 +138,6 @@ export const getAllUsers = async (request, response) => {
 /* Fetch admin details */
 export const getAdminDetail = async (request, response) => {
     try {
-
         const adminId = request.adminId;
         const admin = await Admin.findById(adminId, { password: 0 });
         return response.status(StatusCodes.OK).send({ admin });

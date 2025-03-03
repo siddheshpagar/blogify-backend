@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+// Schema for a blog
 const BlogSchema = new Schema({
     user_ID: {
         type: String,
@@ -25,8 +26,9 @@ const BlogSchema = new Schema({
         type: String,
         required: true,
     }
-}, { timestamps: true });
+}, { timestamps: true });// Automatically adds a time 'createdAt' and 'updatedAt' fields
 
+// Check if the blog model already exists if not create it
 const Blog = mongoose.models.blog || mongoose.model('blog', BlogSchema);
 
 export default Blog;

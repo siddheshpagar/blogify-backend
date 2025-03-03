@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from "path";
 import mongoose from "mongoose";
 
-/* code to fetch all blogs starts from here */
+/* Fetch all blogs */
 export const getAllBlogs = async (request, response) => {
   try {
     const blogs = await Blog.find();
@@ -15,15 +15,12 @@ export const getAllBlogs = async (request, response) => {
     })
   }
 }
-/* code to fetch all blogs ends here */
 
-/* code to fetch blogs by user_ID starts from here*/
+/* Fetch blogs created by logged-in user */
 export const getBlogsByUser = async (request, response) => {
-  // const { user_ID } = request.params;
   const user_ID = request.userId;
   try {
     const blogs = await Blog.find({ user_ID });
-    // console.log(blogs[0]);
     if (blogs.length === 0) {
       return response.status(StatusCodes.NOT_FOUND)
         .send({ message: 'You have created 0 blogs' });
@@ -36,23 +33,18 @@ export const getBlogsByUser = async (request, response) => {
       })
   }
 };
-/* code to fetch blogs by user_ID ends here */
 
-/* code to get blog data by blogId starts from here */
+/* Fetch a blog by its ID */
 export const getBlogById = async (request, response) => {
   try {
     const { id } = request.params;
-
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return response.status(StatusCodes.BAD_REQUEST).send({ message: "Invalid Blog ID" });
     }
-
     const blog = await Blog.findById(id);
-
     if (!blog) {
       return response.status(StatusCodes.NOT_FOUND).send({ message: 'Blog not found' });
     }
-
     response.status(StatusCodes.OK).send({blog});
   } catch (error) {
     response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
@@ -60,26 +52,19 @@ export const getBlogById = async (request, response) => {
     })
   } 
 }
-/* code to get blog data by blogId ends here */
 
-
-/* code to add a new blog starts from here */
+/* Create a new blog */
 export const addBlog = async (request, response) => {
   try {
     const {
-      // user_ID,
       title,
       description,
       category,
       author,
     } = request.body;
-
     const image = request.file ? path.basename(request.file.path) : ''; // Extract only the file name
-
-    // const image = request.file ? request.file.path.replace(/\\/g, '/') : '';
-
-    // const image = request.file ? request.file.path : '';
     const userId = request.userId;
+    
     const newBlog = new Blog({
       user_ID: userId,
       title,
@@ -90,7 +75,6 @@ export const addBlog = async (request, response) => {
     });
 
     const blog = await newBlog.save();
-    // console.log(blog);
     response.status(StatusCodes.CREATED).send({
       blog: blog,
       message: "blog created successfully"
@@ -102,9 +86,8 @@ export const addBlog = async (request, response) => {
     })
   }
 }
-/* code to add a new blog ends here */
 
-/* code to edit blog by ID and delete the old image if a new one is uploaded starts from here */
+/* Update an existing blog and delete the old image */
 export const editBlogById = async (request, response) => {
   const { id } = request.params;
   const { title, description, category, author } = request.body;
@@ -118,7 +101,7 @@ export const editBlogById = async (request, response) => {
       return response.status(StatusCodes.NOT_FOUND).send({ message: 'Blog not found' });
     }
 
-    //Checking if the loggedin user is same the owner of the blog
+    // Ensure only the blog owner can update it
     if (existingBlog.user_ID.toString() !== userId) {
       return response
         .status(StatusCodes.FORBIDDEN)
@@ -128,10 +111,9 @@ export const editBlogById = async (request, response) => {
 
     if (request.file) {
       const oldImagePath = existingBlog.image;//old image path
+      updatedBlog.image = path.basename(request.file.path);
 
-      updatedBlog.image = path.basename(request.file.path);//request.file.path;// set the new image path in the updatedBlog object
-
-      // Delete the old image file
+      // Delete old image
       fs.unlink(`uploads\\blogsImg\\${oldImagePath}`, (error) => {
         if (error) {
           console.error(`Error deleting old image: ${error.message}`);
@@ -153,9 +135,8 @@ export const editBlogById = async (request, response) => {
     })
   }
 }
-/* code to edit blog by ID and delete the old image if a new one is uploaded ends here */
 
-/* code to delete blog by ID and delete the image starts from here */
+/* Delete a blog by its id and remove the blog image */
 export const deleteBlogById = async (request, response) => {
   const { id } = request.params;
 
@@ -189,13 +170,3 @@ export const deleteBlogById = async (request, response) => {
       });
   }
 };
-/* code to delete blog by ID and delete the image ends here */
-
-
-/*user_ID
- title
-description
-category
-author
-image
-date */

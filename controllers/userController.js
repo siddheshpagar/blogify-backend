@@ -5,19 +5,19 @@ import jwt from 'jsonwebtoken';
 
 const JWT_USER_SECRET = process.env.JWT_USER_SECRET; // Access from .env
 
-/* User sign up code starts here */
+/* User sign up */
 export const signUpUser = async (request, response) => {
     try {
-        // console.log("Cookies in signup request:", request.cookies);
         const { name, email, password, designation } = request.body;
 
+        // Check whether all required fields are provided or not 
         if (!name || !email || !password || !designation) {
             return response.status(StatusCodes.BAD_REQUEST).send({
                 message: "All fields are required.",
             });
         }
 
-        // Hash the password
+        // Hash the password before saving it in the database
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create and save the user in database
@@ -35,7 +35,7 @@ export const signUpUser = async (request, response) => {
             .status(StatusCodes.CREATED)
             .send({ message: "User Signup successfully" });
     } catch (error) {
-        // Handle duplicate email error
+        // if duplicate email found send error
         if (
             error.code === 11000 && error.keyPattern?.email
         ) {
@@ -50,47 +50,24 @@ export const signUpUser = async (request, response) => {
         });
     }
 };
-/* User sign up code ends here */
-/*
-export const signUpUser = async (request, response) => {
-    try {
-        const reqData = request.body;
-        reqData["password"] = await bcrypt.hash(reqData.password, 10);
-        const user = new User(reqData);
-        await user.save();
-        response.status(StatusCodes.CREATED).send({ message: "User Signup successfully" });
-    } catch (error) {
-        //if user with same email exist send error with these message
-        if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
-            return response.status(StatusCodes.CONFLICT).send({
-                message: "Email is already registered. Please use a different email."
-            });
-        }
-        response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-            message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
-        });
-    }
-}
-*/
 
-
-/* User login code starts here */
+/* User login */
 export const loginUser = async (request, response) => {
     try {
-        // console.log("Cookies in request:", request.cookies);
         const user = await User.findOne({ email: request.body.email });
         if (user) {
             if (!user.isBlocked) {
+                // Check if password is correct or not
                 const isPasswordValid = await bcrypt.compare(request.body.password, user.password);
                 if (isPasswordValid) {
-                    // const token = jwt.sign({ useremail: user.email }, "userjwt");//generate token
+                    // Generating a JWT token 
                     const token = jwt.sign(
                         { useremail: user.email, id: user._id }
                         , JWT_USER_SECRET
                         // , { expiresIn: '1h' }
                     );
 
-                    // Set the JWT token in the cookie
+                    // Setting the token in a cookie
                     response.cookie('userToken', token, {
                         httpOnly: true,  // Makes it accessible only by the web server
                         secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
@@ -115,12 +92,10 @@ export const loginUser = async (request, response) => {
         response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) });
     }
 }
-/* User login code ends here */
 
-/* code to get details of user starts here */
+/* Fetch user details */
 export const getUserDetail = async (request, response) => {
     try {
-
         const userId = request.userId;
         const user = await User.findById(userId, { password: 0 });
         return response.status(StatusCodes.OK).send({ user });
@@ -130,11 +105,9 @@ export const getUserDetail = async (request, response) => {
         });
     }
 }
-/* code to get details of user starts here */
 
-/* code to logout user starts from here */
+/* User logout */
 export const logoutUser = async (request, response) => {
     response.clearCookie("userToken", { path: "/" });
     return response.status(StatusCodes.OK).send({ message: "you have been successfully logged out." });
 }
-/*code to logout user ends here */

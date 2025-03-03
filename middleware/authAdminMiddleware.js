@@ -4,20 +4,23 @@ import { getReasonPhrase, StatusCodes } from "http-status-codes";
 
 const JWT_ADMIN_SECRET = process.env.JWT_ADMIN_SECRET; // Access from .env
 
-/* jwt token verification code starts here */
+/* Middleware to verify admin authentication */
 function authAdminMiddleware(request, response, next) {
-    const token = request.cookies?.adminToken;
+    const token = request.cookies?.adminToken; // Get the token from cookies
 
     if (token) {
-        // const token = header.split(" ")[1];
+        // Verify the JWT token
         jwt.verify(token, JWT_ADMIN_SECRET, async (error, payload) => {
             if (error) {
+                // when verification fails, return unauthorized status and message
                 return response.status(StatusCodes.UNAUTHORIZED).send({
                     message: "Invalid Token"
                 });
             } else {
+                // Extracting id from token payload
                 const { id } = payload;
                 try {
+                    // check if the admin with id exist in database
                     const admin = await Admin.findById(id);
                     if (!admin) {
                         return response.status(StatusCodes.NOT_FOUND).send({
@@ -25,6 +28,7 @@ function authAdminMiddleware(request, response, next) {
                         });
                     }
                     request.adminId=id;
+                    // Proceed to route handler
                     next();
                 } catch (error) {
                     return response.status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -36,9 +40,9 @@ function authAdminMiddleware(request, response, next) {
 
         });
     } else {
+        // if token not present then tell user to login
        return response.status(StatusCodes.UNAUTHORIZED).send({ message: "Please Login First" });
     }
 }
 
 export default authAdminMiddleware;
-/* jwt token verification code ends here */
