@@ -4,6 +4,6 @@ node_modules/
 .env
 
 # Ignore all files inside uploads/blogsImg except the folder itself
-uploads/blogsImg/*
-!uploads/blogsImg/.gitkeep
+# uploads/blogsImg/*
+# !uploads/blogsImg/.gitkeep
 
