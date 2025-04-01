@@ -63,6 +63,7 @@ export const loginAdmin = async (request, response) => {
                 response.cookie('adminToken', token, {
                     httpOnly: true, // Restrict access to clien-side JavaScript 
                     secure: process.env.NODE_ENV === 'production', // cookie to be sent over https only
+                    sameSite: "None",
                     // maxAge: 60 * 60 * 1000 // Cookie expires in 1 hrs
                 });
 
