@@ -73,7 +73,7 @@ export const loginUser = async (request, response) => {
                         secure: true, // Required for SameSite=None
                         sameSite: 'None', // ✅ Allows cookies across different origins
                         path: '/', // ✅ Make it accessible to all routes
-                        domain: 'blogify-frontend-three.vercel.app', // ✅ Ensure cookies work for the frontend
+                        // domain: 'blogify-frontend-three.vercel.app', // ✅ Ensure cookies work for the frontend
                     });
                     // cookie('userToken', token, {
                     //     httpOnly: true,  // Makes it accessible only by the web server
