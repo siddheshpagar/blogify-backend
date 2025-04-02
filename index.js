@@ -14,12 +14,11 @@ const PORT = process.env.PORT;
 const app = express();
 
 // Setting up CORS to allow frontend to make requests
-app.use(cors(
-    {
-        origin: process.env.FRONTEND_ORIGIN, // Allow requests from perticular URL
-        credentials: true, // Allow cookies
-    }
-));
+app.use(cors({
+    origin: process.env.FRONTEND_ORIGIN, // Ensure this is set correctly in `.env`
+    credentials: true, // ✅ Allow cookies
+}));
+
 
 // Middleware to parse JSON and form data
 app.use(express.json());
