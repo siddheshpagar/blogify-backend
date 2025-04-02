@@ -73,6 +73,7 @@ export const loginUser = async (request, response) => {
                         secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
                         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
                         path: '/',
+                        domain: '.vercel.app',
                         // partitioned: true,
                         // sameSite: "None",
                         // maxAge: 5 * 60 * 1000 // Cookie expires in 5 min
