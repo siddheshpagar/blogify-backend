@@ -9,14 +9,14 @@ import blogRouter from './routes/blogRoutes.js';
 import cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT;
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
+// const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
 
 const app = express();
 
 // Setting up CORS to allow frontend to make requests
 app.use(cors(
     {
-        origin: FRONTEND_ORIGIN, // Allow requests from perticular URL
+        origin: process.env.FRONTEND_ORIGIN, // Allow requests from perticular URL
         credentials: true, // Allow cookies
     }
 ));

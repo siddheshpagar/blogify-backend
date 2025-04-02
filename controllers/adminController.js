@@ -61,8 +61,8 @@ export const loginAdmin = async (request, response) => {
 
                 // Setting the token in a cookie
                 response.cookie('adminToken', token, {
-                    httpOnly: true, // Restrict access to clien-side JavaScript 
-                    secure: process.env.NODE_ENV === 'production', // cookie to be sent over https only
+                    httpOnly: true,  // Makes it accessible only by the web server
+                    secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
                     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
                     partitioned: true,
                     // sameSite: "None",
