@@ -71,7 +71,8 @@ export const loginUser = async (request, response) => {
                     response.cookie('userToken', token, {
                         httpOnly: true,  // Makes it accessible only by the web server
                         secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
-                        sameSite: "None",
+                        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                        // sameSite: "None",
                         // maxAge: 5 * 60 * 1000 // Cookie expires in 5 min
                     });
 
