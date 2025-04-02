@@ -70,7 +70,7 @@ export const loginUser = async (request, response) => {
                     // Setting the token in a cookie
                     response.cookie('userToken', token, {
                         httpOnly: true,
-                        secure: true, // Required for SameSite=None
+                        // secure: true, // Required for SameSite=None
                         sameSite: 'None', // ✅ Allows cookies across different origins
                         path: '/', // ✅ Make it accessible to all routes
                         // domain: 'blogify-frontend-three.vercel.app', // ✅ Ensure cookies work for the frontend
