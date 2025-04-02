@@ -73,6 +73,7 @@ export const loginUser = async (request, response) => {
                         secure: true,  // ✅ Required for `SameSite=None`
                         sameSite: 'None', // ✅ Important for cross-site cookies
                         path: '/', 
+                        domain: '.vercel.app',
                     });
                     
                     // cookie('userToken', token, {
