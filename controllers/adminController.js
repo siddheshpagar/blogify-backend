@@ -64,6 +64,7 @@ export const loginAdmin = async (request, response) => {
                     httpOnly: true, // Restrict access to clien-side JavaScript 
                     secure: process.env.NODE_ENV === 'production', // cookie to be sent over https only
                     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                    partitioned: true,
                     // sameSite: "None",
                     // maxAge: 60 * 60 * 1000 // Cookie expires in 1 hrs
                 });
