@@ -69,12 +69,11 @@ export const loginUser = async (request, response) => {
 
                     // Setting the token in a cookie
                     response.cookie('userToken', token, {
-                        httpOnly: true,  // Makes it accessible only by the web server
-                        secure: true,//process.env.NODE_ENV === 'production', // Ensure secure cookies in production
-                        sameSite: 'None',//process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        // path: '/',
-                        // domain: 'localhost',
-                        // partitioned: true,
+                        httpOnly: true,  // Makes it not accessible to client side script
+                        secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
+                        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                        domain: process.env.NODE_ENV === 'production' ? "blogify-frontend-three.vercel.app" : 'localhost',
+                        path: "/",
                     });
 
                     response.status(StatusCodes.OK).send({

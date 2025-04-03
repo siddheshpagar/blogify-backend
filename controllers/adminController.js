@@ -61,12 +61,11 @@ export const loginAdmin = async (request, response) => {
 
                 // Setting the token in a cookie
                 response.cookie('adminToken', token, {
-                    httpOnly: true,  // Makes it accessible only by the web server
+                    httpOnly: true,  // Makes it not accessible to client side script
                     secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
                     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                    // path: '/',
-                    // domain: 'blogify-frontend-three.vercel.app',
-                    // partitioned: true,
+                    domain: process.env.NODE_ENV === 'production' ? "blogify-frontend-three.vercel.app" : 'localhost',
+                    path: "/",
                 });
 
                 return response.status(StatusCodes.OK).send({
