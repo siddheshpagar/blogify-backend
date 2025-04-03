@@ -15,7 +15,7 @@ const app = express();
 
 // Setting up CORS to allow frontend to make requests
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN, // Ensure this is set correctly in `.env`
+    origin: 'https://blogify-frontend-three.vercel.app', //process.env.FRONTEND_ORIGIN, // Ensure this is set correctly in `.env`
     credentials: true, // ✅ Allow cookies
 }));
 
