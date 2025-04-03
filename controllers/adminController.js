@@ -61,15 +61,12 @@ export const loginAdmin = async (request, response) => {
 
                 // Setting the token in a cookie
                 response.cookie('adminToken', token, {
-                    httpOnly: true, // Secure from client-side scripts
-                    secure: true, // Required for HTTPS
-                    sameSite: 'None', // Required for cross-origin requests
-                    path: '/',
-                    domain: '.blogify-frontend-three.vercel.app',
+                    httpOnly: true,  // Makes it accessible only by the web server
+                    secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
+                    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                    // path: '/',
+                    // domain: 'blogify-frontend-three.vercel.app',
                     // partitioned: true,
-                    // partitioned: true,
-                    // sameSite: "None",
-                    // maxAge: 60 * 60 * 1000 // Cookie expires in 1 hrs
                 });
 
                 return response.status(StatusCodes.OK).send({

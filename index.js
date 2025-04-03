@@ -1,4 +1,4 @@
-import 'dotenv/config'; 
+import 'dotenv/config';
 import express, { request, response } from 'express';
 import cors from 'cors';
 import { ConnectDb } from './databaseConnection/config/db.js';
@@ -15,8 +15,8 @@ const app = express();
 
 // Setting up CORS to allow frontend to make requests
 app.use(cors({
-    origin: 'https://blogify-frontend-three.vercel.app', //process.env.FRONTEND_ORIGIN, // Ensure this is set correctly in `.env`
-    credentials: true, // ✅ Allow cookies
+    origin: process.env.FRONTEND_ORIGIN,
+    credentials: true, // Allow cookies
 }));
 
 
@@ -49,5 +49,5 @@ app.use("/like", likeRouter);
 // Starting the server and connect to the database
 app.listen(PORT, () => {
     LoadDB();
-    console.log("server started at port "+PORT);
+    console.log("server started at port " + PORT);
 });

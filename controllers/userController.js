@@ -69,23 +69,13 @@ export const loginUser = async (request, response) => {
 
                     // Setting the token in a cookie
                     response.cookie('userToken', token, {
-                        httpOnly: true, 
-                        secure: true,  // ✅ Required for `SameSite=None`
-                        sameSite: 'None', // ✅ Important for cross-site cookies
-                        path: '/', 
-                        domain: '.vercel.app',
+                        httpOnly: true,  // Makes it accessible only by the web server
+                        secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
+                        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                        // path: '/',
+                        // domain: 'localhost',
+                        // partitioned: true,
                     });
-                    
-                    // cookie('userToken', token, {
-                    //     httpOnly: true,  // Makes it accessible only by the web server
-                    //     secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
-                    //     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                    //     path: '/',
-                    //     domain: '.vercel.app',
-                    //     // partitioned: true,
-                    //     // sameSite: "None",
-                    //     // maxAge: 5 * 60 * 1000 // Cookie expires in 5 min
-                    // });
 
                     response.status(StatusCodes.OK).send({
                         message: "Login Successfull",
