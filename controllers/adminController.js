@@ -65,6 +65,7 @@ export const loginAdmin = async (request, response) => {
                     secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
                     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
                     path: '/',
+                    domain: '.blogify-frontend-three.vercel.app',
                     // partitioned: true,
                     // partitioned: true,
                     // sameSite: "None",
