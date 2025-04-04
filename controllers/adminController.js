@@ -64,7 +64,6 @@ export const loginAdmin = async (request, response) => {
                     httpOnly: true,  // Makes it not accessible to client side script
                     secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
                     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                    domain: '.onrender.com',
                     // domain: process.env.NODE_ENV === 'production' ? "blogify-frontend-4sur.onrender.com" : 'localhost',
                     path: "/",
                 });
