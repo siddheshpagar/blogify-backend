@@ -74,7 +74,7 @@ export const loginUser = async (request, response) => {
                         // sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
                         sameSite: 'none',
                         maxAge: 1000 * 60 * 60 * 24 * 7,
-                        // domain: process.env.NODE_ENV === 'production' ? ".vercel.app" : 'localhost',
+                        domain: process.env.NODE_ENV === 'production' ? ".vercel.app" : 'localhost',
                         // path: "/",
                     });
 
