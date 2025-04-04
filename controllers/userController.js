@@ -71,9 +71,11 @@ export const loginUser = async (request, response) => {
                     response.cookie('userToken', token, {
                         httpOnly: true,  // Makes it not accessible to client side script
                         secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
-                        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        domain: process.env.NODE_ENV === 'production' ? ".vercel.app" : 'localhost',
-                        path: "/",
+                        // sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                        sameSite: 'none',
+                        maxAge: 1000 * 60 * 60 * 24 * 7,
+                        // domain: process.env.NODE_ENV === 'production' ? ".vercel.app" : 'localhost',
+                        // path: "/",
                     });
 
                     response.status(StatusCodes.OK).send({
