@@ -72,7 +72,7 @@ export const loginUser = async (request, response) => {
                         httpOnly: true,  // Makes it not accessible to client side script
                         secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
                         // sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        sameSite: 'None',
+                        sameSite: 'Lax',
                         maxAge: 1000 * 60 * 60 * 24 * 7,
                         domain: process.env.NODE_ENV === 'production' ? "blogify-frontend-three.vercel.app" : 'localhost',
                         // path: "/",
