@@ -61,7 +61,7 @@ export const loginAdmin = async (request, response) => {
 
                 // Setting the token in a cookie
                 response.cookie('adminToken', token, {
-                    httpOnly: true,  // Makes it not accessible to client side script
+                    httpOnly: false,  // Makes it not accessible to client side script
                     secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
                     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
                     // domain: process.env.NODE_ENV === 'production' ? "blogify-frontend-4sur.onrender.com" : 'localhost',
