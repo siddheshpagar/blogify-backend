@@ -68,16 +68,17 @@ export const loginUser = async (request, response) => {
                     );
 
                     // Setting the token in a cookie
-                    response.cookie('userToken', token, {
-                        httpOnly: false,  // Makes it not accessible to client side script
-                        secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
-                        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        domain: 'localhost',//process.env.NODE_ENV === 'production' ? "blogify-frontend-4sur.onrender.com" : 'localhost',
-                        path: "/",
-                    });
+                    // response.cookie('userToken', token, {
+                    //     httpOnly: false,  // Makes it not accessible to client side script
+                    //     secure: process.env.NODE_ENV === 'production', // Ensure secure cookies in production
+                    //     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                    //     domain: process.env.NODE_ENV === 'production' ? "blogify-frontend-4sur.onrender.com" : 'localhost',
+                    //     path: "/",
+                    // });
 
                     response.status(StatusCodes.OK).send({
                         message: "Login Successfull",
+                        token,
                     });
                 }
                 else {
