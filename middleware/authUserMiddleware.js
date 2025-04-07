@@ -34,8 +34,8 @@ function authUserMiddleware(request, response, next) {
             }
 
             request.userId = id;
-            next(); // Token and user valid, proceed
-        } catch (err) {
+            next();
+        } catch (error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
                 message: "Internal Server Error",
             });

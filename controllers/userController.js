@@ -62,9 +62,9 @@ export const loginUser = async (request, response) => {
                 if (isPasswordValid) {
                     // Generating a JWT token 
                     const token = jwt.sign(
-                        { useremail: user.email, id: user._id }
-                        , JWT_USER_SECRET
-                        // , { expiresIn: '1h' }
+                        { useremail: user.email, id: user._id },
+                        JWT_USER_SECRET,
+                        // { expiresIn: '1h' }
                     );
 
                     // Setting the token in a cookie
