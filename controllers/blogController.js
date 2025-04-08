@@ -8,9 +8,9 @@ import mongoose from "mongoose";
 export const getAllBlogs = async (request, response) => {
   try {
     const blogs = await Blog.find();
-    response.status(StatusCodes.OK).send({blogs});
+    return response.status(StatusCodes.OK).send({ blogs });
   } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+    return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
       message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
     })
   }
@@ -25,9 +25,9 @@ export const getBlogsByUser = async (request, response) => {
       return response.status(StatusCodes.NOT_FOUND)
         .send({ message: 'You have created 0 blogs' });
     }
-    response.status(StatusCodes.OK).send({ blogs });
+    return response.status(StatusCodes.OK).send({ blogs });
   } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR)
+    return response.status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send({
         message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
       })
@@ -45,12 +45,12 @@ export const getBlogById = async (request, response) => {
     if (!blog) {
       return response.status(StatusCodes.NOT_FOUND).send({ message: 'Blog not found' });
     }
-    response.status(StatusCodes.OK).send({blog});
+    return response.status(StatusCodes.OK).send({ blog });
   } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+    return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
       message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
     })
-  } 
+  }
 }
 
 /* Create a new blog */
@@ -64,7 +64,7 @@ export const addBlog = async (request, response) => {
     } = request.body;
     const image = request.file ? path.basename(request.file.path) : ''; // Extract only the file name
     const userId = request.userId;
-    
+
     const newBlog = new Blog({
       user_ID: userId,
       title,
@@ -75,13 +75,13 @@ export const addBlog = async (request, response) => {
     });
 
     const blog = await newBlog.save();
-    response.status(StatusCodes.CREATED).send({
+    return response.status(StatusCodes.CREATED).send({
       blog: blog,
       message: "blog created successfully"
     });
   } catch (error) {
     console.log(error);
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+    return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
       message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
     })
   }
@@ -125,12 +125,12 @@ export const editBlogById = async (request, response) => {
       updatedBlog.image = existingBlog.image;
     }
     const blog = await Blog.findByIdAndUpdate(id, updatedBlog, { new: true });// Update the blog and send new updated data
-    response.status(StatusCodes.OK).send({
+    return response.status(StatusCodes.OK).send({
       blog,
-      message:"Your blog has been successfully updated!",
+      message: "Your blog has been successfully updated!",
     });
   } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+    return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
       message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
     })
   }
@@ -159,12 +159,12 @@ export const deleteBlogById = async (request, response) => {
       }
     });
 
-    response.status(StatusCodes.OK)
+    return response.status(StatusCodes.OK)
       .json({
         message: 'Blog deleted successfully'
       });
   } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR)
+    return response.status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({
         message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
       });

@@ -45,7 +45,7 @@ export const signUpUser = async (request, response) => {
         }
 
         // Handle unexpected errors
-        response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
         });
     }
@@ -76,23 +76,23 @@ export const loginUser = async (request, response) => {
                     //     path: "/",
                     // });
 
-                    response.status(StatusCodes.OK).send({
+                    return response.status(StatusCodes.OK).send({
                         message: "Login Successfull",
                         token,
                     });
                 }
                 else {
-                    response.status(StatusCodes.UNAUTHORIZED).send({ message: "Invalid Password" });
+                    return response.status(StatusCodes.UNAUTHORIZED).send({ message: "Invalid Password" });
                 }
             } else {
-                response.status(StatusCodes.FORBIDDEN).send({ message: "Access denied. Your account has been blocked. contact admin" });
+                return response.status(StatusCodes.FORBIDDEN).send({ message: "Access denied. Your account has been blocked. contact admin" });
             }
         }
         else {
-            response.status(StatusCodes.UNAUTHORIZED).send({ message: "Invalid email" });
+            return response.status(StatusCodes.UNAUTHORIZED).send({ message: "Invalid email" });
         }
     } catch (error) {
-        response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) });
+        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) });
     }
 }
 
